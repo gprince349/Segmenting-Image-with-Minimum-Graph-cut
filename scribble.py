@@ -1,12 +1,13 @@
 import cv2
 import numpy as np
 
-fn = "deer.png"
+fname = "deer.png"
 drawing = False # true if mouse is pressed
 mode = True # if True, draw rectangle. Press 'm' to toggle to curve
 ix,iy = -1,-1
 bp = []
 rp = []
+img = np.zeros((4,4))
 # mouse callback function
 def draw_circle(event,x,y,flags,param):
     global ix,iy,drawing,mode,bp,rp
@@ -34,24 +35,31 @@ def draw_circle(event,x,y,flags,param):
             rp.append((x,y))
 
 
-img = cv2.imread(fn)
-cv2.namedWindow('image')
-cv2.setMouseCallback('image',draw_circle)
 
-while(1):
-    cv2.imshow('image',img)
-    k = cv2.waitKey(1) & 0xFF
-    if k == ord('m'):
-        mode = not mode
-    elif k == ord('s'):
-        break
+def scribe(fn):
+    global img,mode,bp,rp
+    img = cv2.imread(fn)
+    cv2.namedWindow('image')
+    cv2.setMouseCallback('image',draw_circle)
+    
+    while(1):
+        cv2.imshow('image',img)
+        k = cv2.waitKey(1) & 0xFF
+        if k == ord('m'):
+            mode = not mode
+        elif k == ord('s'):
+            break
 
-img = cv2.imread(fn,0)
-bpos = set(bp)
-bp = list(bpos)
-rpos = set(rp)
-rp = list(rpos)
+    img = cv2.imread(fn,0)
+    bpos = set(bp)
+    bp = list(bpos)
+    rpos = set(rp)
+    rp = list(rpos)
 
-bpixval = [img[x,y] for (x,y) in bp]
-rpixval = [img[x,y] for (x,y) in rp]
-cv2.destroyAllWindows()
+    bpixval = [img[y,x] for (x,y) in bp]
+    rpixval = [img[y,x] for (x,y) in rp]
+    cv2.destroyAllWindows()
+    return bp,rp,bpixval,rpixval
+
+if __name__ == "__main__":
+    a,b,c,d = scribe(fname)
