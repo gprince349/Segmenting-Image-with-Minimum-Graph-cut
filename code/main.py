@@ -1,13 +1,14 @@
+import argparse
+import matplotlib.pyplot as plt 
+import cv2
+import numpy as np 
+
 from scribble import *
 from compute_weights import *
 from graph_cut import *
 
-import argparse
-import matplotlib.pyplot as plt 
-import cv2
-
 LAMBDA = 10000
-SIGMA = 0.3
+SIGMA = 0.05
 
 '''
 weights need to be integers because graph algorithms works on 
@@ -25,12 +26,14 @@ if __name__ == "__main__":
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray_img = gray_img/256
 
-    F_pos, B_pos, list_B, list_F = scribe("deer.png")
+    cv2.imshow("", gray_img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+    F_pos, B_pos, list_B, list_F = scribe(file)
 
-    graph = get_graph(img, SIGMA, LAMBDA, F_pos, B_pos, list_B, list_F):
+    graph = get_graph(gray_img, SIGMA, LAMBDA, F_pos, B_pos, list_B, list_F)
+    print(graph[:5], len(graph[-2]), len(graph[-1]))
 
-    g = Graph(graph)
+    # g = Graph(graph)
      
-    source = 0; sink = 5
-      
-    print ("The maximum possible flow is %d " % g.FordFulkerson(source, sink))
+    # print ("The maximum possible flow is %d " % g.FordFulkerson(source, sink))
