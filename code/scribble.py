@@ -117,8 +117,7 @@ class Scribe:
         cv2.destroyAllWindows()
         return self.bp,self.rp,bpixval,rpixval
 if __name__ == "__main__":
-    print("ysy")
-    s1 = Scribe("deer.png")
+    s1 = Scribe("../data/deer.png")
     a,b,c,d=s1.startscribe()
     # fname = "deer.png"
     # a,b,c,d = scribe(fname)
