@@ -4,7 +4,7 @@ import math as m
 from scribble import *
 
 Lambda = 10000
-Sigma = 0.3
+Sigma = 0.05
 
 #weights need to be integers because graph algorithms works on 
 #integral weights
@@ -67,7 +67,7 @@ def filter_weights(WiF,WiB, position_F, position_B,MIN,MAX):
         WiB[p[0],p[1]] = MIN
 
     for p in position_B:
-        print(p)
+        # print(p)
         WiF[p[0],p[1]] = MIN
         WiB[p[0],p[1]] = MAX
         
@@ -80,7 +80,10 @@ img = img/256
 print(img.shape)
 # #intra-pixels weight matrix
 D,U,L,R = W_ij(img,img,Sigma)
-# print(D)
+print("D==========>",D)
+# cv2.imshow('deer',D)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()
 
 scribble_F_pos, scribble_B_pos, scribble_B, scribble_F = scribe("deer.png")
 
@@ -93,12 +96,11 @@ WiF,WiB = filter_weights(WiF,WiB, scribble_F_pos, scribble_B_pos, MIN,MAX)
 WiF = WiF.astype(int)
 WiB = WiB.astype(int)
 
-# print(WiB)
+print("WiB===========>",WiB)
+print("WiF===========>",WiF)
+
 print(type(WiF))
 
 # img = img/256
 # print(img)
 # print(D)
-# cv2.imshow('deer',D)
-# cv2.waitKey(5000)
-# cv2.destroyAllWindows()
