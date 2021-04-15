@@ -108,7 +108,6 @@ def get_graph(img, Sigma, Lambda, F_pos, B_pos, list_B, list_F):
 
     return graph
 
-    return graph
 
 
 if __name__ == "__main__":
