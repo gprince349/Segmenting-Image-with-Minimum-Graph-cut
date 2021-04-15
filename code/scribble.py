@@ -1,13 +1,14 @@
 import cv2
 import numpy as np
 
-fname = "deer.png"
+fname = "../data/deer.png"
 drawing = False # true if mouse is pressed
 mode = True # if True, draw rectangle. Press 'm' to toggle to curve
 ix,iy = -1,-1
 bp = []
 rp = []
 img = np.zeros((4,4))
+
 # mouse callback function
 def draw_circle(event,x,y,flags,param):
     global ix,iy,drawing,mode,bp,rp
@@ -51,10 +52,8 @@ def scribe(fn):
             break
 
     img = cv2.imread(fn,0)
-    bpos = set(bp)
-    bp = list(bpos)
-    rpos = set(rp)
-    rp = list(rpos)
+    bp = list(set(bp))
+    rp = list(set(rp))
 
     bpixval = [img[x,y] for (x,y) in bp]
     rpixval = [img[x,y] for (x,y) in rp]
@@ -63,5 +62,3 @@ def scribe(fn):
 
 if __name__ == "__main__":
     a,b,c,d = scribe(fname)
-    # print(a)
-    # print(c)
