@@ -1,7 +1,9 @@
 import cv2
 import numpy as np
 
-fname = "../data/deer.png"
+fname = "./data/deer.png"
+
+
 drawing = False # true if mouse is pressed
 mode = True # if True, draw rectangle. Press 'm' to toggle to curve
 ix,iy = -1,-1
@@ -63,6 +65,7 @@ def scribe(fn):
     rpixval = [img[x,y] for (x,y) in rp]
     cv2.destroyAllWindows()
     return bp,rp,bpixval,rpixval
+
 
 if __name__ == "__main__":
     a,b,c,d = scribe(fname)

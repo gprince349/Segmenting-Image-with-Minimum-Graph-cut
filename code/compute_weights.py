@@ -1,7 +1,7 @@
 import numpy as np 
 import cv2
 import math as m
-from scribble import *
+# from scribble import *
 
 #weights need to be integers because graph algorithms works on 
 #integral weights
@@ -109,22 +109,22 @@ def get_graph(img, Sigma, Lambda, F_pos, B_pos, list_B, list_F):
     return graph
 
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
 
-    img = cv2.imread('../data/deer.png',cv2.IMREAD_GRAYSCALE)
-    img = img/256
-    print(img.shape)
+#     img = cv2.imread('../data/deer.png',cv2.IMREAD_GRAYSCALE)
+#     img = img/256
+#     print(img.shape)
 
-    F_pos, B_pos, list_B, list_F = scribe("../data/deer.png")
+#     F_pos, B_pos, list_B, list_F = scribe("../data/deer.png")
 
-    # #intra-pixels weight matrix
-    D,U,L,R, D_idx,U_idx,L_idx,R_idx, idx = W_ij(img,img,Sigma)
+#     # #intra-pixels weight matrix
+#     D,U,L,R, D_idx,U_idx,L_idx,R_idx, idx = W_ij(img,img,Sigma)
 
-    #inter-pixels (with Background and foreground) weight matrix
-    GB,GF = compute_pdfs(list_F, list_B)
-    WiF,WiB = WiFB(img,Lambda,GB,GF)
+#     #inter-pixels (with Background and foreground) weight matrix
+#     GB,GF = compute_pdfs(list_F, list_B)
+#     WiF,WiB = WiFB(img,Lambda,GB,GF)
 
-    #for known scrible positions making wights infinite and 0 
-    WiF,WiB = filter_weights(WiF,WiB, F_pos, B_pos, MIN,MAX)
-    WiF = WiF.astype(int)
-    WiB = WiB.astype(int)
+#     #for known scrible positions making wights infinite and 0 
+#     WiF,WiB = filter_weights(WiF,WiB, F_pos, B_pos, MIN,MAX)
+#     WiF = WiF.astype(int)
+#     WiB = WiB.astype(int)
