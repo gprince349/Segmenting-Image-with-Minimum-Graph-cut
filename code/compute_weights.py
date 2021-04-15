@@ -7,7 +7,7 @@ from scribble import *
 #integral weights
 
 Lambda = 10000
-Sigma = 0.3
+Sigma = 0.05
 
 #between pixels
 INT_F = 100
@@ -29,11 +29,11 @@ def W_ij(I1, I2, Sigma):
     return D,U,L,R
 
 
-def compute_pdfs(scribble_F, scribble_B):
-    mean1 = np.mean(scribble_B)
-    mean2 = np.mean(scribble_F)
-    std1 = np.std(scribble_B)
-    std2 = np.std(scribble_F)
+def compute_pdfs(list_F, list_B):
+    mean1 = np.mean(list_B)
+    mean2 = np.mean(list_F)
+    std1 = np.std(list_B)
+    std2 = np.std(list_F)
     GB = (mean1,std1)
     GF = (mean2,std2)
     print("GB => ",GB)
@@ -67,7 +67,7 @@ def filter_weights(WiF,WiB, position_F, position_B,MIN,MAX):
         WiB[p[0],p[1]] = MIN
 
     for p in position_B:
-        print(p)
+        # print(p)
         WiF[p[0],p[1]] = MIN
         WiB[p[0],p[1]] = MAX
         
@@ -96,27 +96,17 @@ if __name__ == "__main__":
     img = img/256
     print(img.shape)
 
-    scribble_F_pos, scribble_B_pos, scribble_B, scribble_F = scribe("deer.png")
+    F_pos, B_pos, list_B, list_F = scribe("deer.png")
 
     # #intra-pixels weight matrix
     D,U,L,R = W_ij(img,img,Sigma)
     # print(D)
 
     #inter-pixels (with Background and foreground) weight matrix
-    GB,GF = compute_pdfs(scribble_F, scribble_B)
+    GB,GF = compute_pdfs(list_F, list_B)
     WiF,WiB = WiFB(img,Lambda,GB,GF)
 
     #for known scrible positions making wights infinite and 0 
-    WiF,WiB = filter_weights(WiF,WiB, scribble_F_pos, scribble_B_pos, MIN,MAX)
+    WiF,WiB = filter_weights(WiF,WiB, F_pos, B_pos, MIN,MAX)
     WiF = WiF.astype(int)
     WiB = WiB.astype(int)
-
-    # print(WiB)
-    print(type(WiF))
-
-    # img = img/256
-    # print(img)
-    # print(D)
-    # cv2.imshow('deer',D)
-    # cv2.waitKey(5000)
-    # cv2.destroyAllWindows()
