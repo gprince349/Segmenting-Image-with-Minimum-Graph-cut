@@ -39,6 +39,7 @@ def draw_circle(event,x,y,flags,param):
 def scribe(fn):
     global img,mode,bp,rp
     img = cv2.imread(fn)
+    print("scribble shape==>",img.shape)
     cv2.namedWindow('image')
     cv2.setMouseCallback('image',draw_circle)
     
@@ -59,7 +60,11 @@ def scribe(fn):
     bpixval = [img[y,x] for (x,y) in bp]
     rpixval = [img[y,x] for (x,y) in rp]
     cv2.destroyAllWindows()
-    return bp,rp,bpixval,rpixval
+    return bp,rp,np.array(bpixval)/256,np.array(rpixval)/256
 
 if __name__ == "__main__":
     a,b,c,d = scribe(fname)
+    print("======>>>",a)
+    print("======>>>",b)
+    print("======>>>",c)
+    print("======>>>",d)
