@@ -99,15 +99,15 @@ class Scribe:
         cv2.setMouseCallback('image',self.draw_circle)
         while(1):
             cv2.imshow('image',self.img)
-            # print("check1")
-            k = cv2.waitKey(1) and 0xFF
-            # print("check2")
+            print("check1")
+            k = cv2.waitKey(1) & 0xFF
+            print("check2")
             if k == ord('m'):
-                # print("check3")
+                print("check3")
                 self.mode = not self.mode
-                # print("check4")
+                print("check4")
             elif k == ord('s'):
-                # print("checks")
+                print("checks")
                 break
 
         
@@ -130,4 +130,3 @@ if __name__ == "__main__":
     # a,b,c,d = scribe(fname)
     print(a)
     # # print(c)
-    
