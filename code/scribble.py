@@ -43,14 +43,18 @@ def scribe(fn):
     cv2.namedWindow('image')
     cv2.setMouseCallback('image',draw_circle)
     
+    print(1)
     while(1):
         cv2.imshow('image',img)
+        print("3")
         k = cv2.waitKey(1) & 0xFF
+
         if k == ord('m'):
             mode = not mode
         elif k == ord('s'):
             break
 
+    print(5)
     img = cv2.imread(fn,0)
     bp = list(set(bp))
     rp = list(set(rp))

@@ -1,15 +1,11 @@
-# Python program for implementation
-# of Ford Fulkerson algorithm
 from collections import defaultdict
- 
-# This class represents a directed graph
-# using adjacency matrix representation
+
 class Graph:
  
     def __init__(self, graph):
-        self.graph = graph  # residual graph
-        self. ROW = len(graph)
-        # self.COL = len(gr[0])
+        # convention of adj_list (Ii, [Iup, Idown, Ileft, Iright]) (WiF) (WiB)
+        self.graph = graph
+        self.ROW = len(graph)
  
     '''Returns true if there is a path from source 's' to sink 't' in
     residual graph. Also fills parent[] to store the path '''
@@ -40,7 +36,7 @@ class Graph:
                       # If we find a connection to the sink node,
                     # then there is no point in BFS anymore
                     # We just have to set its parent and can return true
-                      if ind == t:
+                    if ind == t:
                         visited[ind] = True
                         return True
                     queue.append(ind)
