@@ -1,0 +1,7 @@
+Members:
+180050013	:	Ashish Gupta
+180050085	:	Rhushabh Gedam
+180050097	:	Shashank Roy
+
+Title:
+Interactive Image Segmentation with Graph-Cut in Python
