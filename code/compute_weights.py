@@ -108,14 +108,15 @@ def get_graph(img, Sigma, Lambda, F_pos, B_pos, list_B, list_F):
 
     return graph
 
+    return graph
 
-# if __name__ == "__main__":
 
-#     img = cv2.imread('../data/deer.png',cv2.IMREAD_GRAYSCALE)
-#     img = img/256
-#     print(img.shape)
+if __name__ == "__main__":
 
-#     F_pos, B_pos, list_B, list_F = scribe("../data/deer.png")
+    F_pos, B_pos, list_B, list_F = scribe("../data/deer.png")
+
+    # #intra-pixels weight matrix
+    D,U,L,R, D_idx,U_idx,L_idx,R_idx, idx = W_ij(img,img,Sigma)
 
 #     # #intra-pixels weight matrix
 #     D,U,L,R, D_idx,U_idx,L_idx,R_idx, idx = W_ij(img,img,Sigma)
