@@ -20,26 +20,25 @@ def draw_circle(event,x,y,flags,param):
         if drawing == True:
             if mode == True:
                 cv2.circle(img,(x,y),3,(255,0,0),-1)
-                bp.append((x,y))
+                bp.append((y,x))
             else:
                 cv2.circle(img,(x,y),3,(0,0,255),-1)
-                rp.append((x,y))
+                rp.append((y,x))
 
     elif event == cv2.EVENT_LBUTTONUP:
         drawing = False
         if mode == True:
             cv2.circle(img,(x,y),3,(255,0,0),-1)
-            bp.append((x,y))
+            bp.append((y,x))
         else:
             cv2.circle(img,(x,y),3,(0,0,255),-1)
-            rp.append((x,y))
+            rp.append((y,x))
 
 
 
 def scribe(fn):
     global img,mode,bp,rp
     img = cv2.imread(fn)
-    print("scribble shape==>",img.shape)
     cv2.namedWindow('image')
     cv2.setMouseCallback('image',draw_circle)
     
@@ -57,14 +56,12 @@ def scribe(fn):
     rpos = set(rp)
     rp = list(rpos)
 
-    bpixval = [img[y,x] for (x,y) in bp]
-    rpixval = [img[y,x] for (x,y) in rp]
+    bpixval = [img[x,y] for (x,y) in bp]
+    rpixval = [img[x,y] for (x,y) in rp]
     cv2.destroyAllWindows()
-    return bp,rp,np.array(bpixval)/256,np.array(rpixval)/256
+    return bp,rp,bpixval,rpixval
 
 if __name__ == "__main__":
     a,b,c,d = scribe(fname)
-    print("======>>>",a)
-    print("======>>>",b)
-    print("======>>>",c)
-    print("======>>>",d)
+    # print(a)
+    # print(c)
