@@ -60,13 +60,13 @@ import numpy as np
 #     return bp,rp,bpixval,rpixval
 
 class Scribe:
-    def __init__(self,fname):
-        self.fname = fname
+    def __init__(self,img):
         self.bp = []
         self.rp = []
         self.drawing = False # true if mouse is pressed
         self.mode = True
-        self.img = cv2.imread(fname)
+        self.orig_img = img
+        self.img = img
         self.ix = 0
         self.iy=0
     
@@ -111,7 +111,7 @@ class Scribe:
                 break
 
         
-        img = cv2.imread(self.fname,0)
+        img = self.orig_img
         bpos = set(self.bp)
         self.bp = list(bpos)
         rpos = set(self.rp)
@@ -123,9 +123,7 @@ class Scribe:
         return self.bp,self.rp,bpixval,rpixval
 
 if __name__ == "__main__":
-    s1 = Scribe("../data/deer.png")
+    img = cv.imread("../data/deer.png")
+    s1 = Scribe(img)
     a,b,c,d=s1.startscribe()
-    # fname = "deer.png"
-    # a,b,c,d = scribe(fname)
-    # print(a)
-    # # print(c)
+    

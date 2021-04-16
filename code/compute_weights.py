@@ -102,7 +102,8 @@ def get_graph(img, Sigma, Lambda, F_pos, B_pos, list_B, list_F):
     WiF, WiB = WiF.flatten(), WiB.flatten()
 
     # convention of adj_list (Ii, [Iup, Idown, Ileft, Iright]) (WiF) (WiB)
-    graph = [ [(U_idx[i], U[i]), (D_idx[i], D[i]), (L_idx[i], L[i]), (R_idx[i], R[i])] for i in range(m*n)]
+    idx_F, idx_B = m*n, m*n + 1
+    graph = [ [(U_idx[i], U[i]), (D_idx[i], D[i]), (L_idx[i], L[i]), (R_idx[i], R[i]), (idx_F, WiF[i]), (idx_B, WiB[i])] for i in range(m*n)]
     graph.append( list(zip(idx, WiF)) )
     graph.append( list(zip(idx, WiB)) )
 
