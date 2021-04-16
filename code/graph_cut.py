@@ -1,17 +1,5 @@
-# Python program for finding min-cut in the given graph 
-# Complexity : (E*(V^3)) 
-# Total augmenting path = VE and BFS 
-# with adj matrix takes :V^2 times 
-  
 from collections import defaultdict 
-
-# def search(graph, parent, s):
-#     print(graph)
-#     print(parent, s)
-#     for idx, (i, val) in enumerate(graph[parent]):
-#         if i == s:
-#             return idx
-#     return -1
+import numpy as np
 
 # graph[parent][s]
 def find(graph, parent, s):
@@ -21,27 +9,26 @@ def find(graph, parent, s):
     return 0
 
 # graph[parent][s] += v
-def add(graph, parent, s, v):
+def add(graph_tmp, parent, s, v):
+    adj = graph_tmp[parent][:]
     found = False
-    for idx, (i, val) in enumerate(graph[parent]):
+    for idx, (i, val) in enumerate(adj):
         if i == s:
-            graph[parent][idx][1] += v
+            adj[idx][1] += v
             found = True
             break
 
     if not found:
-        graph[parent].append([s, v])
+        adj.append([s, v])
 
-    return graph[parent]
+    return adj
 
-# This class represents a directed graph
-# using adjacency matrix representation 
 class Graph: 
   
     def __init__(self,graph): 
         self.graph = graph # residual graph 
         self.org_graph = [i[:] for i in graph] 
-        self. ROW = len(graph) 
+        self.ROW = len(graph) 
         self.COL = len(graph[-1]) 
   
     '''Returns true if there is a path from 
@@ -50,10 +37,8 @@ class Graph:
     parent[] to store the path '''
     def BFS(self,s, t, parent): 
   
-        # Mark all the vertices as not visited 
         visited =[False]*(self.ROW) 
   
-        # Create a queue for BFS 
         queue=[] 
   
         # Mark the source node as visited and enqueue it 
@@ -71,8 +56,10 @@ class Graph:
             # If a adjacent has not been
             # visited, then mark it 
             # visited and enqueue it 
-            # for ind, val in enumerate(self.graph[u]): 
-            for (ind, val) in self.graph[u]: 
+
+# ======================================================================
+            for ind, val in enumerate(self.graph[u]): 
+            # for (ind, val) in self.graph[u]: 
                 if visited[ind] == False and val > 0 : 
                     queue.append(ind) 
                     visited[ind] = True
@@ -88,7 +75,9 @@ class Graph:
     def dfs(self, graph,s,visited):
         visited[s]=True
         for i in range(len(graph)):
-            if find(graph, s, i)>0 and not visited[i]:
+# ======================================================================
+            if graph[s][i]>0 and not visited[i]:
+            # if find(graph, s, i)>0 and not visited[i]:
                 self.dfs(graph,i,visited)
   
     # Returns the min-cut of the given graph 
@@ -108,10 +97,11 @@ class Graph:
             path_flow = float("Inf") 
             s = sink 
             while(s != source): 
-                path_flow = min (path_flow, find(self.graph, parent[s], s) ) 
+# ======================================================================
+                path_flow = min (path_flow, self.graph[parent[s]][s])
+                # path_flow = min (path_flow, find(self.graph, parent[s], s) ) 
                 s = parent[s] 
   
-            # Add path flow to overall flow 
             max_flow += path_flow 
   
             # update residual capacities of the edges and reverse edges 
@@ -119,8 +109,11 @@ class Graph:
             v = sink 
             while(v != source): 
                 u = parent[v] 
-                self.graph[u] = add(self.graph, u, v, -path_flow)
-                self.graph[v] = add(self.graph, v, u, path_flow)
+# ======================================================================
+                self.graph[u][v] -= path_flow 
+                self.graph[v][u] += path_flow 
+                # self.graph[u] = add(self.graph, u, v, -path_flow)
+                # self.graph[v] = add(self.graph, v, u, path_flow)
                 v = parent[v] 
   
         visited=len(self.graph)*[False]
@@ -130,9 +123,20 @@ class Graph:
         # but now have 0 weight 
         for i in range(self.ROW): 
             for j in range(self.COL): 
-                if find(self.graph, i, j) == 0 and find(self.org_graph, i, j) > 0 and visited[i]: 
+# ======================================================================
+                if self.graph[i][j] == 0 and self.org_graph[i][j] > 0 and visited[i]: 
+                # if find(self.graph, i, j) == 0 and find(self.org_graph, i, j) > 0 and visited[i]: 
                     print(str(i) + " - " + str(j) )
   
+
+def conv_adj_list(adj):
+    l = len(adj)
+    g = [[0 for _ in range(l)] for _ in range(l)]
+    for i in range(l):
+        for j in range(len(adj[i])):
+            g[i][ adj[i][j][0] ] = adj[i][j][1]
+    return g
+
 
 if __name__ == "__main__":
     # Create a graph given in the above diagram 
@@ -149,8 +153,11 @@ if __name__ == "__main__":
                 [[2, 9], [5, 20]],
                 [[3, 7], [5, 4]],
                 []]
-      
-    g = Graph(adj_list) 
+
+    c = conv_adj_list(adj_list)
+    print(c)
+
+    g = Graph(c) 
       
     source = 0; sink = 5
       

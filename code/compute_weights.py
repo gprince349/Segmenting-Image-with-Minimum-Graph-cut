@@ -51,7 +51,7 @@ def compute_pdfs(list_F, list_B):
     return GB,GF
 
 def Gauss(x,mean,std):
-    print(mean,std)
+    # print(mean,std)
     f = (1/(std*m.sqrt(2*m.pi)))*1000
     print("f =>",f)
     mat = (x-mean)/std
@@ -112,8 +112,12 @@ def get_graph(img, Sigma, Lambda, F_pos, B_pos, list_B, list_F):
 
 if __name__ == "__main__":
 
-    F_pos, B_pos, list_B, list_F = scribe("../data/deer.png")
+    from scribble import *
+    file = "../data/deer.png"
+    scribe = Scribe(file)
+    F_pos, B_pos, list_B, list_F = scribe.startscribe()
 
+    img = cv2.imread(file, 0)
     # #intra-pixels weight matrix
     D,U,L,R, D_idx,U_idx,L_idx,R_idx, idx = W_ij(img,img,Sigma)
 

@@ -123,9 +123,9 @@ class Scribe:
         return self.bp,self.rp,bpixval,rpixval
 
 if __name__ == "__main__":
-    s1 = Scribe("deer.png")
+    s1 = Scribe("../data/deer.png")
     a,b,c,d=s1.startscribe()
     # fname = "deer.png"
     # a,b,c,d = scribe(fname)
-    print(a)
+    # print(a)
     # # print(c)
