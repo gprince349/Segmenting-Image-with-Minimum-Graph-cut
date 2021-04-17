@@ -54,7 +54,7 @@ class Graph:
         self.file = file
         self.fname = fname
         self.orig_img = cv2.imread(file)
-        self.orig_img = cv2.resize(self.orig_img, (40, 40))
+        self.orig_img = cv2.resize(self.orig_img, (30, 30))
 
     def initialise_graph(self, graph):
         self.graph = graph # residual graph 

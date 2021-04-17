@@ -7,10 +7,10 @@ import math as m
 #integral weights
 
 Lambda = 10000
-Sigma = 0.05
+Sigma = 0.01
 
 #between pixels
-INT_F = 100
+INT_F = 200000
 MIN = 0
 MAX = 1e9
 eps = 1e-8
@@ -26,11 +26,14 @@ def W_ij(I1, I2, Sigma):
     R = np.roll(I2,-1,axis=1)
 
     D = (np.exp(f*np.square(I1-D))*INT_F).astype(int)
+    # cv2.imshow("new",D)
+    # cv2.waitKey(6000)
+    # cv2.destroyAllWindows()
     U = (np.exp(f*np.square(I1-U))*INT_F).astype(int)
     L = (np.exp(f*np.square(I1-L))*INT_F).astype(int)
     R = (np.exp(f*np.square(I1-R))*INT_F).astype(int)
 
-    print("D==========>",D)
+    # print("D==========>",D)
     # indices switch up <-> down, left <-> right
     U_idx = np.roll(idx,-1,axis=0)
     D_idx = np.roll(idx,1,axis=0)
@@ -64,11 +67,11 @@ def Gauss(x,mean,std):
 
 def WiFB(img,Lambda,GB,GF):
 
-    Prob_F = Gauss(img, GF[0],GF[1])
-    Prob_B = Gauss(img, GB[0],GB[1])
+    Prob_F = Gauss(img, GF[0],eps+GF[1])
+    Prob_B = Gauss(img, GB[0],eps+GB[1])
   
-    WiF = -1*Lambda*np.log(eps + np.divide(Prob_B,(Prob_F+Prob_B)))
-    WiB = -1*Lambda*np.log(eps + np.divide(Prob_F,(Prob_F+Prob_B)))
+    WiF = -1*Lambda*np.log(eps + np.divide(Prob_B,eps+(Prob_F+Prob_B)))
+    WiB = -1*Lambda*np.log(eps + np.divide(Prob_F,eps+(Prob_F+Prob_B)))
     # print("WiB========>",WiB)
     # print("WiF=============>",WiF)
     return WiF,WiB
@@ -98,18 +101,18 @@ def get_graph(img, Sigma, Lambda, F_pos, B_pos, list_B, list_F):
     WiB = WiB.astype(int)
 
     # flatten everything to fit into adjacency list
-    m, n = img.shape
-    D, U, L, R = D.flatten(), U.flatten(), L.flatten(), R.flatten()
-    D_idx,U_idx,L_idx,R_idx, idx = D_idx.flatten(),U_idx.flatten(),L_idx.flatten(),R_idx.flatten(), idx.flatten()
-    WiF, WiB = WiF.flatten(), WiB.flatten()
+    # m, n = img.shape
+    # D, U, L, R = D.flatten(), U.flatten(), L.flatten(), R.flatten()
+    # D_idx,U_idx,L_idx,R_idx, idx = D_idx.flatten(),U_idx.flatten(),L_idx.flatten(),R_idx.flatten(), idx.flatten()
+    # WiF, WiB = WiF.flatten(), WiB.flatten()
 
     # convention of adj_list (Ii, [Iup, Idown, Ileft, Iright]) (WiF) (WiB)
-    idx_F, idx_B = m*n, m*n + 1
-    graph = [ [(U_idx[i], U[i]), (D_idx[i], D[i]), (L_idx[i], L[i]), (R_idx[i], R[i]), (idx_F, WiF[i]), (idx_B, WiB[i])] for i in range(m*n)]
-    graph.append( list(zip(idx, WiF)) )
-    graph.append( list(zip(idx, WiB)) )
+    # idx_F, idx_B = m*n, m*n + 1
+    # graph = [ [(U_idx[i], U[i]), (D_idx[i], D[i]), (L_idx[i], L[i]), (R_idx[i], R[i]), (idx_F, WiF[i]), (idx_B, WiB[i])] for i in range(m*n)]
+    # graph.append( list(zip(idx, WiF)) )
+    # graph.append( list(zip(idx, WiB)) )
 
-    return graph
+    return D,U,L,R,WiF,WiB
 
 
 
