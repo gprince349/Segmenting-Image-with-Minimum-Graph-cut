@@ -30,6 +30,7 @@ def W_ij(I1, I2, Sigma):
     L = (np.exp(f*np.square(I1-L))*INT_F).astype(int)
     R = (np.exp(f*np.square(I1-R))*INT_F).astype(int)
 
+    print("D==========>",D)
     # indices switch up <-> down, left <-> right
     U_idx = np.roll(idx,-1,axis=0)
     D_idx = np.roll(idx,1,axis=0)
@@ -68,7 +69,8 @@ def WiFB(img,Lambda,GB,GF):
   
     WiF = -1*Lambda*np.log(eps + np.divide(Prob_B,(Prob_F+Prob_B)))
     WiB = -1*Lambda*np.log(eps + np.divide(Prob_F,(Prob_F+Prob_B)))
-    
+    # print("WiB========>",WiB)
+    # print("WiF=============>",WiF)
     return WiF,WiB
 
 def filter_weights(WiF,WiB, position_F, position_B,MIN,MAX):
@@ -102,7 +104,8 @@ def get_graph(img, Sigma, Lambda, F_pos, B_pos, list_B, list_F):
     WiF, WiB = WiF.flatten(), WiB.flatten()
 
     # convention of adj_list (Ii, [Iup, Idown, Ileft, Iright]) (WiF) (WiB)
-    graph = [ [(U_idx[i], U[i]), (D_idx[i], D[i]), (L_idx[i], L[i]), (R_idx[i], R[i])] for i in range(m*n)]
+    idx_F, idx_B = m*n, m*n + 1
+    graph = [ [(U_idx[i], U[i]), (D_idx[i], D[i]), (L_idx[i], L[i]), (R_idx[i], R[i]), (idx_F, WiF[i]), (idx_B, WiB[i])] for i in range(m*n)]
     graph.append( list(zip(idx, WiF)) )
     graph.append( list(zip(idx, WiB)) )
 

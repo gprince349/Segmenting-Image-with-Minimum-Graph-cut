@@ -1,5 +1,11 @@
 from collections import defaultdict 
-import numpy as np
+import argparse
+import cv2
+import numpy as np 
+import os
+
+from scribble import *
+from compute_weights import *
 
 # graph[parent][s]
 def find(graph, parent, s):
@@ -23,9 +29,34 @@ def add(graph_tmp, parent, s, v):
 
     return adj
 
+def conv_adj_list(adj):
+    l = len(adj)
+    g = np.zeros((l, l))
+    for i in range(l):
+        # print(i)
+        for j in range(len(adj[i])):
+            g[i][ adj[i][j][0] ] = adj[i][j][1]
+
+    return g.tolist()
+
+
+def masked_img(img, visited):
+    m, n, _ = img.shape
+    mask = np.array(visited[:-2]).reshape(m, n).astype("uint8")
+    masked = cv2.bitwise_and(img, img, mask=mask)
+    return masked
+
+
 class Graph: 
   
-    def __init__(self,graph): 
+    def __init__(self, file): 
+        fname = os.path.basename(file)
+        self.file = file
+        self.fname = fname
+        self.orig_img = cv2.imread(file)
+        self.orig_img = cv2.resize(self.orig_img, (40, 40))
+
+    def initialise_graph(self, graph):
         self.graph = graph # residual graph 
         self.org_graph = [i[:] for i in graph] 
         self.ROW = len(graph) 
@@ -65,6 +96,7 @@ class Graph:
                     visited[ind] = True
                     parent[ind] = u 
   
+        self.display_image(visited)
         # If we reached sink in BFS starting
         # from source, then return 
         # true, else false 
@@ -87,10 +119,10 @@ class Graph:
         parent = [-1]*(self.ROW) 
   
         max_flow = 0 # There is no flow initially 
-  
+        s = sink
         # Augment the flow while there is path from source to sink 
         while self.BFS(source, sink, parent) : 
-  
+            # print(max_flow)
             # Find minimum residual capacity of the edges along the 
             # path filled by BFS. Or we can say find the maximum flow 
             # through the path found. 
@@ -127,38 +159,69 @@ class Graph:
                 if self.graph[i][j] == 0 and self.org_graph[i][j] > 0 and visited[i]: 
                 # if find(self.graph, i, j) == 0 and find(self.org_graph, i, j) > 0 and visited[i]: 
                     print(str(i) + " - " + str(j) )
-  
+        return visited
 
-def conv_adj_list(adj):
-    l = len(adj)
-    g = [[0 for _ in range(l)] for _ in range(l)]
-    for i in range(l):
-        for j in range(len(adj[i])):
-            g[i][ adj[i][j][0] ] = adj[i][j][1]
-    return g
+    def display_image(self, visited, save=False):
+        out_img = masked_img(self.orig_img, visited)
+        cv2.imshow("Segmented Image", out_img)
+        cv2.waitKey(1)
+        if save:
+            cv2.imwrite(out_img, "../results/" + self.fname)
+
+    def segment_image(self):
+        img = self.orig_img
+        gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray_img = gray_img/256
+        print(gray_img)
+
+        s1 = Scribe(img.copy(), gray_img.copy())
+        F_pos, B_pos, list_F, list_B = s1.startscribe()
+        print(list_B)
+        graph = get_graph(gray_img, Sigma, Lambda, F_pos, B_pos, list_B, list_F)
+
+        # print(len(graph), len(graph[-1]))
+        graph = conv_adj_list(graph)
+
+        # convention of adj_list (Ii, [Iup, Idown, Ileft, Iright]) (WiF) (WiB)
+        self.initialise_graph(graph)
+        ROW = self.ROW
+        src = ROW - 2
+        sink = ROW - 1
+
+        visited = self.minCut(src, sink)
+        
+        self.display_image(visited)
+        # cv2.waitKey(-1)
+        k = cv2.waitKey(-1) & 0xFF
+        if k == ord('s'):
+            self.display_image(visited, save=True)
+        cv2.destroyAllWindows()
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--img', required=True, help='Image to segment')
+    args = parser.parse_args()
+    file = args.img
+
     # Create a graph given in the above diagram 
-    graph = [[0, 16, 13, 0, 0, 0], 
-            [0, 0, 10, 12, 0, 0], 
-            [0, 4, 0, 0, 14, 0], 
-            [0, 0, 9, 0, 0, 20], 
-            [0, 0, 0, 7, 0, 4], 
-            [0, 0, 0, 0, 0, 0]] 
+    # graph = [[0, 16, 13, 0, 0, 0], 
+    #         [0, 0, 10, 12, 0, 0], 
+    #         [0, 4, 0, 0, 14, 0], 
+    #         [0, 0, 9, 0, 0, 20], 
+    #         [0, 0, 0, 7, 0, 4], 
+    #         [0, 0, 0, 0, 0, 0]] 
 
-    adj_list = [[[1, 16], [2, 13]],
-                [[2, 10], [3, 12]],
-                [[1, 4], [4, 14]],
-                [[2, 9], [5, 20]],
-                [[3, 7], [5, 4]],
-                []]
+    # adj_list = [[[1, 16], [2, 13]],
+    #             [[2, 10], [3, 12]],
+    #             [[1, 4], [4, 14]],
+    #             [[2, 9], [5, 20]],
+    #             [[3, 7], [5, 4]],
+    #             []]
 
-    c = conv_adj_list(adj_list)
-    print(c)
+    # c = conv_adj_list(adj_list)
+    # source = 0; sink = 5
 
-    g = Graph(c) 
-      
-    source = 0; sink = 5
-      
-    g.minCut(source, sink) 
+    g = Graph(file) 
+    g.segment_image()
