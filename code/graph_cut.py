@@ -33,7 +33,11 @@ def conv_adj_list(adj):
     l = len(adj)
     g = np.zeros((l, l))
     for i in range(l):
+<<<<<<< HEAD
         # print(i)
+=======
+        print(i)
+>>>>>>> bdc4b96b5ebcc64a1f42ddbadabb723fa5350c30
         for j in range(len(adj[i])):
             g[i][ adj[i][j][0] ] = adj[i][j][1]
 
@@ -54,7 +58,11 @@ class Graph:
         self.file = file
         self.fname = fname
         self.orig_img = cv2.imread(file)
+<<<<<<< HEAD
         self.orig_img = cv2.resize(self.orig_img, (40, 40))
+=======
+        self.orig_img = cv2.resize(self.orig_img, (30, 30))
+>>>>>>> bdc4b96b5ebcc64a1f42ddbadabb723fa5350c30
 
     def initialise_graph(self, graph):
         self.graph = graph # residual graph 
@@ -122,7 +130,11 @@ class Graph:
         s = sink
         # Augment the flow while there is path from source to sink 
         while self.BFS(source, sink, parent) : 
+<<<<<<< HEAD
             # print(max_flow)
+=======
+            print(max_flow)
+>>>>>>> bdc4b96b5ebcc64a1f42ddbadabb723fa5350c30
             # Find minimum residual capacity of the edges along the 
             # path filled by BFS. Or we can say find the maximum flow 
             # through the path found. 
