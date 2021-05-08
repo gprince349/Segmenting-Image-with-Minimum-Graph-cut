@@ -69,6 +69,9 @@ class Scribe:
         self.img = img
         self.ix = 0
         self.iy=0
+
+        h, w = img.shape[0], img.shape[1]
+        self.ref_img = np.zeros((h, w, 3))
     
     def draw_circle(self,event,x,y,flags,param):
 
@@ -80,19 +83,23 @@ class Scribe:
             if self.drawing == True:
                 if self.mode == True:
                     cv2.circle(self.img,(x,y),3,(255,0,0),-1)
-                    self.bp.append((y,x))
+                    cv2.circle(self.ref_img,(x,y),3,(255,0,0),-1)
+                    # self.bp.append((y,x))
                 else:
                     cv2.circle(self.img,(x,y),3,(0,0,255),-1)
-                    self.rp.append((y,x))
+                    cv2.circle(self.ref_img,(x,y),3,(0,0,255),-1)
+                    # self.rp.append((y,x))
 
         elif event == cv2.EVENT_LBUTTONUP:
             self.drawing = False
             if self.mode == True:
                 cv2.circle(self.img,(x,y),3,(255,0,0),-1)
-                self.bp.append((y,x))
+                cv2.circle(self.ref_img,(x,y),3,(255,0,0),-1)
+                # self.bp.append((y,x))
             else:
                 cv2.circle(self.img,(x,y),3,(0,0,255),-1)
-                self.rp.append((y,x))
+                cv2.circle(self.ref_img,(x,y),3,(0,0,255),-1)
+                # self.rp.append((y,x))
 
     def startscribe(self):
         cv2.namedWindow('image')
@@ -111,6 +118,15 @@ class Scribe:
                 break
 
         
+        # for bp
+        y, x = np.where(self.ref_img[:, :, 0] == 255)
+        for i in range(y.shape[0]):
+            self.bp.append((y[i], x[i]))
+        # for rp
+        y, x = np.where(self.ref_img[:, :, 2] == 255)
+        for i in range(y.shape[0]):
+            self.rp.append((y[i], x[i]))
+
         img = self.orig_img
         bpos = set(self.bp)
         self.bp = list(bpos)
