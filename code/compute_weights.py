@@ -12,7 +12,7 @@ import math as m
 #between pixels
 INT_F = 1
 MIN = 0
-MAX = 1e9
+MAX = 100
 eps = 1e-8
 
 def W_ij(I1, I2, Sigma):
@@ -70,8 +70,8 @@ def WiFB(img,Lambda,GB,GF):
     Prob_F = Gauss(img, GF[0],eps+GF[1])
     Prob_B = Gauss(img, GB[0],eps+GB[1])
   
-    WiF = -1*Lambda*np.log( np.divide(Prob_B,(Prob_F+Prob_B)))
-    WiB = -1*Lambda*np.log( np.divide(Prob_F,(Prob_F+Prob_B)))
+    WiF = -1*Lambda*np.log( np.divide(Prob_B,(eps+Prob_F+Prob_B)))
+    WiB = -1*Lambda*np.log( np.divide(Prob_F,(eps +Prob_F+Prob_B)))
     # print("WiB========>",WiB)
     # print("WiF=============>",WiF)
     return WiF,WiB

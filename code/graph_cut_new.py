@@ -19,7 +19,7 @@ if __name__ == "__main__":
     orig_img = cv2.imread(file)
     print(orig_img)
     orig_img = cv2.blur(orig_img, (3,3))
-    orig_img = cv2.resize(orig_img, (500, 500), interpolation=cv2.INTER_CUBIC)
+    orig_img = cv2.resize(orig_img, (600, 600), interpolation=cv2.INTER_CUBIC)
     img = orig_img
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     gray_orig = gray_img
@@ -32,15 +32,18 @@ if __name__ == "__main__":
     print("Blist===================>",list_B)
 
     test_img = orig_img
-    Sigma = 0.02
+    Sigma = 0.1
     Lambda = 0.4
-    for i in range(4):
+    for i in range(1):
         orig_img = test_img
         # Sigma = Sigma + 0.01
-        Lambda = Lambda+0.01
+
         print("Lambda ==> ", Lambda)
         D,U,L,R,WiF,WiB = get_graph(gray_img, Sigma, Lambda, F_pos, B_pos, list_B, list_F)
-
+        cv2.imshow("fore",WiF)
+        cv2.imshow("back", WiB)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
         print("WiF========================>",WiF)
         print("WiB========================>",WiB)
         print("D=========================>", D)
@@ -66,12 +69,14 @@ if __name__ == "__main__":
         for i in range(m):
             for j in range(n):
                 if(graph.get_segment(i*m+j)):
-                    orig_img[i,j,:] = 0
+                    orig_img[i,j,:] = 255
 
         # print(mask)
         cv2.imshow("image",orig_img)
-        cv2.waitKey(3000)
+        cv2.waitKey(0)
         cv2.destroyAllWindows()
+        Lambda = Lambda+0.03
+
 
 
 
