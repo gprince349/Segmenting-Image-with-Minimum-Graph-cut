@@ -1,0 +1,5 @@
+maxflow==0.0.1
+numpy==1.19.5
+opencv-python==4.5.1.48
+pipreqs==0.4.10
+PyMaxflow==1.2.13
