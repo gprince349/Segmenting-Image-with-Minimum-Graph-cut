@@ -82,23 +82,23 @@ class Scribe:
         elif event == cv2.EVENT_MOUSEMOVE:
             if self.drawing == True:
                 if self.mode == True:
-                    cv2.circle(self.img,(x,y),3,(255,0,0),-1)
-                    cv2.circle(self.ref_img,(x,y),3,(255,0,0),-1)
+                    cv2.circle(self.img,(x,y),5,(255,0,0),-1)
+                    cv2.circle(self.ref_img,(x,y),5,(255,0,0),-1)
                     # self.bp.append((y,x))
                 else:
-                    cv2.circle(self.img,(x,y),3,(0,0,255),-1)
-                    cv2.circle(self.ref_img,(x,y),3,(0,0,255),-1)
+                    cv2.circle(self.img,(x,y),5,(0,0,255),-1)
+                    cv2.circle(self.ref_img,(x,y),5,(0,0,255),-1)
                     # self.rp.append((y,x))
 
         elif event == cv2.EVENT_LBUTTONUP:
             self.drawing = False
             if self.mode == True:
-                cv2.circle(self.img,(x,y),3,(255,0,0),-1)
-                cv2.circle(self.ref_img,(x,y),3,(255,0,0),-1)
+                cv2.circle(self.img,(x,y),5,(255,0,0),-1)
+                cv2.circle(self.ref_img,(x,y),5,(255,0,0),-1)
                 # self.bp.append((y,x))
             else:
-                cv2.circle(self.img,(x,y),3,(0,0,255),-1)
-                cv2.circle(self.ref_img,(x,y),3,(0,0,255),-1)
+                cv2.circle(self.img,(x,y),5,(0,0,255),-1)
+                cv2.circle(self.ref_img,(x,y),5,(0,0,255),-1)
                 # self.rp.append((y,x))
 
     def startscribe(self):

@@ -6,13 +6,13 @@ import math as m
 #weights need to be integers because graph algorithms works on 
 #integral weights
 
-Lambda = 10000
-Sigma = 0.01
+# Lambda = 20
+# Sigma = 0.01
 
 #between pixels
-INT_F = 200000
+INT_F = 1
 MIN = 0
-MAX = 1e9
+MAX = 100
 eps = 1e-8
 
 def W_ij(I1, I2, Sigma):
@@ -25,13 +25,13 @@ def W_ij(I1, I2, Sigma):
     L = np.roll(I2,1,axis=1)
     R = np.roll(I2,-1,axis=1)
 
-    D = (np.exp(f*np.square(I1-D))*INT_F).astype(int)
-    # cv2.imshow("new",D)
-    # cv2.waitKey(6000)
-    # cv2.destroyAllWindows()
-    U = (np.exp(f*np.square(I1-U))*INT_F).astype(int)
-    L = (np.exp(f*np.square(I1-L))*INT_F).astype(int)
-    R = (np.exp(f*np.square(I1-R))*INT_F).astype(int)
+    D = (np.exp(f*np.square(I1-D))*INT_F)
+    cv2.imshow("new",D)
+    cv2.waitKey(6000)
+    cv2.destroyAllWindows()
+    U = (np.exp(f*np.square(I1-U))*INT_F)
+    L = (np.exp(f*np.square(I1-L))*INT_F)
+    R = (np.exp(f*np.square(I1-R))*INT_F)
 
     # print("D==========>",D)
     # indices switch up <-> down, left <-> right
@@ -56,7 +56,7 @@ def compute_pdfs(list_F, list_B):
 
 def Gauss(x,mean,std):
     # print(mean,std)
-    f = (1/(std*m.sqrt(2*m.pi)))*1000
+    f = (1/(std*m.sqrt(2*m.pi)))
     print("f =>",f)
     mat = (x-mean)/std
     # print("mat====>",mat)
@@ -70,8 +70,8 @@ def WiFB(img,Lambda,GB,GF):
     Prob_F = Gauss(img, GF[0],eps+GF[1])
     Prob_B = Gauss(img, GB[0],eps+GB[1])
   
-    WiF = -1*Lambda*np.log(eps + np.divide(Prob_B,eps+(Prob_F+Prob_B)))
-    WiB = -1*Lambda*np.log(eps + np.divide(Prob_F,eps+(Prob_F+Prob_B)))
+    WiF = -1*Lambda*np.log( np.divide(Prob_B,(eps+Prob_F+Prob_B)))
+    WiB = -1*Lambda*np.log( np.divide(Prob_F,(eps +Prob_F+Prob_B)))
     # print("WiB========>",WiB)
     # print("WiF=============>",WiF)
     return WiF,WiB
@@ -97,8 +97,8 @@ def get_graph(img, Sigma, Lambda, F_pos, B_pos, list_B, list_F):
 
     #for known scrible positions making weights infinite and 0 
     WiF,WiB = filter_weights(WiF,WiB, F_pos, B_pos, MIN,MAX)
-    WiF = WiF.astype(int)
-    WiB = WiB.astype(int)
+    # WiF = WiF.astype(int)
+    # WiB = WiB.astype(int)
 
     # flatten everything to fit into adjacency list
     # m, n = img.shape
