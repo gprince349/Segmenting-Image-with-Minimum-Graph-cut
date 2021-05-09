@@ -13,6 +13,7 @@ import math as m
 INT_F = 1
 MIN = 0
 MAX = 100
+
 eps = 1e-8
 
 def W_ij(I1, I2, Sigma):
